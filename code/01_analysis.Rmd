@@ -47,7 +47,7 @@ conflicted::conflict_prefer("mutate", "dplyr")
 
 # load data 
 
-lit_review <- read_csv("/home/jae/linked_fate_review/raw_data/linked_fate_review2.csv")
+lit_review <- read_csv("/home/jae/linked_fate_review/raw_data/linked_fate_review.csv")
 
 ```
 
