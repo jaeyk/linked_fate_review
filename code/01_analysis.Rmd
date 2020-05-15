@@ -1,0 +1,192 @@
+---
+title: "Linked fate lit. review"
+author: "Jae Yeon Kim"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+```{r include=FALSE}
+# load packages
+pacman::p_load(
+          knitr,
+          zoo,
+          foreign,
+          ggplot2,
+          reshape,
+          reshape2,
+          plyr,
+          reshape2,
+          tidyr,
+          dplyr,
+          tm,
+          tau,
+          readr,
+          plotly,
+          koRpus,
+          tidyverse,
+          tidytext,
+          quanteda,
+          SnowballC,
+          stringr,
+          readtext,
+          stringi,
+          spacyr,
+          corpustools,
+          stm,
+          igraph,
+          stmCorrViz)
+
+# load functions 
+source("/home/jae/functions-/theme_publications.r")
+
+# load data 
+lit_review <- read.csv("/home/jae/linked_fate_review/raw_data/linked_fate_review2.csv")
+```
+
+
+# 1. Data Collection 
+
+I searched linked fate related articles using Google scholar. I used two search queries: (1) "linked fate" + "dawson" and (2) "linked fate" + "group consciousness" + "solidarity". (1) is a narrow search which only found articles that are directly related to Dawson's origianl work. (2) is a broad search which found articles that are thematically related to the topcis that Dawson discussed in his book. I avoided collecting data on books, book chapters, and book reviews since the conents of many of them overlap with what individual research papers reported. I searched up to 150 results using each search query and removed the duplicates in them. Obviously, this data are not exhausitive but they at least provide some systematic evidence on the scholarly works on linked fate.
+
+
+## The total N of articles
+
+First, let's look at the total N of articles.
+
+```{r echo=FALSE}
+cat(("The total number of articles is"), length(lit_review$Author))
+```
+
+Some articles are lit reviews or law review artices or thoeretical pieces that don't discuss data. Let's exclude them.
+
+```{r echo=FALSE}
+cat("The total number of empirical articles is", 
+    length(subset(lit_review, is.na(Survey) == FALSE)$Author))
+
+
+cat("The percentage of empirical articles in the data is", 
+    length(subset(lit_review, is.na(Survey) == FALSE)$Author)/length(lit_review$Author))
+```
+
+```{r echo=FALSE}
+cat("The total number of journals in the data is",
+    length(unique(lit_review$Journal)))
+
+```
+
+
+## Overall patterns
+
+An overall publication pattern on linked fate. Articles publisehd in recent years are less likely to be included in the data due to their less well-known status. That may explain why there are fewer articles in the past few years.
+
+### Publication trend on linked fate
+
+```{r echo=FALSE}
+
+lit_review %>%
+  group_by(Pub.year) %>%
+  count() %>%
+  ggplot(aes(x = Pub.year, y = n)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(se = FALSE) +
+  theme_Publication() +
+  labs(title = "Publication trend on linked fate",
+    x = "Publication years", y = "Count")
+
+ggsave("/home/jae/linked_fate_review/output/pub_trend.png")
+```
+
+### Publication on linked fate by subject group
+
+```{r echo=FALSE}
+lit_review %>%
+  gather(group, value, Black, Black_immigrants, Asian, Latinx, Whites, Others) %>%
+  filter(value == 1) %>%
+  group_by(Pub.year, group) %>%
+  count() %>%
+  ggplot(aes(x = Pub.year, y = n, col = group)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(se = FALSE) +
+  theme_Publication() +
+  labs(title = "Publication trend on linked fate sorted by subject groups",
+    x = "Publication years", y = "Count", col = "Subject groups")
+
+ggsave("/home/jae/linked_fate_review/output/pub_trend_sub_groups.png")
+
+
+lit_review %>%
+  mutate(total = Black + Black_immigrants + Asian + Latinx + Whites + Others) %>%
+  gather(group, value, Black, Black_immigrants, Asian, Latinx, Whites, Others, total) %>%
+  filter(value >= 1) %>%
+  group_by(group) %>%
+  count()
+
+lit_review %>%
+  mutate(total = Black + Black_immigrants + Asian + Latinx + Whites + Others) %>%
+  gather(group, value, Black, Black_immigrants, Asian, Latinx, Whites, Others, total) %>%
+  filter(value >= 2) %>%
+  group_by(group) %>%
+  count()
+```
+
+## Journal patterns 
+
+General social science categories include journals like APSR, AJSP, JOP as well as Political Research Quarterly (PQR) and American Politics Research (APR).
+
+```{r echo=FALSE}
+
+lit_review %>%
+  group_by(Journal_type) %>%
+  count() %>%
+  ggplot(aes(x = reorder(Journal_type, n), y = n)) +
+  geom_col() +
+  coord_flip() +
+  theme_Publication() +
+  labs(title = "Articles by journal types",
+    x = "Journal types", y = "Count")
+
+ggsave("/home/jae/linked_fate_review/output/pub_trend_journals.png")
+```
+
+## Data patterns 
+
+Note that these counts are not mutually exclusive. For instance, some studies use surveys plus experimens or qualitative evidence (interviews). Since methods follow trends, I did line rather than bar plotting.
+
+1. Survey: relying on survey data 
+    
+2. Experiment: relying on experimental data 
+
+3. Qualitative: relying on qualitative evidence (e.g., interviews)
+
+
+```{r echo=FALSE}
+
+lit_review %>%
+  gather(data_types, values, Survey, Experiment, Qualitative) %>%
+  filter(values == 1) %>%
+  group_by(data_types, Pub.year) %>%
+  count() %>%
+  ggplot(aes(x = Pub.year, n, col = data_types)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(se = FALSE) +
+  theme_Publication() +
+  labs(title = "Publication trend by data type",
+    x = "Year", y = "Count", col = "Data types")
+
+ggsave("/home/jae/linked_fate_review/output/pub_trend_data_types.png")
+```
+
+# Key takeaways 
+
+1. Linked fate research has been growing and expanding (from black to especially latinx)
+
+2. Mostly driven by survey data (86%)
+
+3. Articles discussing environmental factors analyze contextual variables not contexts 
+
+4. Few employed mixed-methods or utilized cross-national or cross-regional comparisons 
+
+5. Comparions are mostly done in the context of survey data (heterogeneous treatment effects)
