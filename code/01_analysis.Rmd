@@ -62,12 +62,15 @@ I searched linked fate related articles using Google scholar. I used two search 
 First, let's look at the total N of articles.
 
 ```{r echo=FALSE}
-cat(("The total number of articles is"), length(lit_review$Author))
+
+cat(("The total number of articles is"), nrow(lit_review))
+
 ```
 
 Some articles are lit reviews or law review artices or thoeretical pieces that don't discuss data. Let's exclude them.
 
 ```{r echo=FALSE}
+
 cat("The total number of empirical articles is", 
     length(subset(lit_review, is.na(Survey) == FALSE)$Author))
 
@@ -97,11 +100,11 @@ An overall publication pattern on linked fate. Articles publisehd in recent year
 lit_review %>%
   group_by(Pub.year) %>%
   count() %>%
-  ggplot(aes(x = Pub.year, y = cumsum(n))) +
+  ggplot(aes(x = Pub.year, y = n)) +
   geom_point() +
   geom_line() +
   theme_pubr() +
-  labs(title = "Publication trend on linked fate", x = "Publication years", y = "Cumulative count") + scale_x_continuous(breaks= c(2000, 2005, 2010, 2015)) +
+  labs(title = "Publication trend on linked fate", x = "Publication years", y = "Count") + scale_x_continuous(breaks= c(2000, 2005, 2010, 2015)) +
   scale_y_continuous(breaks= scales::pretty_breaks()) +
   theme(axis.text.x=element_text(angle=90, hjust=1))
 
@@ -116,19 +119,23 @@ ggsave("/home/jae/linked_fate_review/output/pub_trend.png", width = 7)
 lit_review %>%
   gather(group, value, Black, Black_immigrants, Asian, Latinx, Whites, Others) %>%
   filter(value == 1) %>%
-  group_by(group) %>%
+  group_by(Pub.year, group) %>%
   dplyr::summarize(n = n()) %>%
   mutate(prop = n / sum(n),
-         prop = round(prop,2),
-         group = recode(group, 
+         prop = round(prop,2)) %>%
+  mutate(group = recode(group, 
                         'Black_immigrants' = "Black immigrants",
                         'Asian' = 'Asian Americans')) %>%
-  ggplot(aes(x = fct_reorder(group, prop), y = prop)) +
-  geom_col() +
-  labs(title = "Publication trend on linked fate sorted by research subjects",
-    x = "Research subjects", y = "Percentage") +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  theme_pubr() 
+  filter(Pub.year >= 2002) %>%
+  ggplot(aes(x = Pub.year, y = prop, fill = group)) +
+    geom_col(position = "fill") +
+    labs(title = "Publication trend on linked fate sorted by research subjects",
+      x = "Publication years", y = "Percentage",
+      fill = "Research subjects") +
+    scale_x_continuous(breaks= c(2000, 2005, 2010, 2015)) +
+    scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+    theme_pubr() +
+    scale_fill_npg()
 
 ggsave("/home/jae/linked_fate_review/output/pub_trend_sub_groups.png", width = 8)
 
@@ -186,17 +193,20 @@ Note that these counts are not mutually exclusive. For instance, some studies us
 lit_review %>%
   gather(data_types, values, Survey, Experiment, Qualitative) %>%
   filter(values == 1) %>%
-  group_by(data_types) %>%
+  group_by(Pub.year, data_types) %>%
   dplyr::summarize(n = n()) %>%
   mutate(prop = n / sum(n),
          prop = round(prop,2)) %>%
-  ggplot(aes(x = fct_reorder(data_types, prop), y = prop)) +
-  geom_col() +
-  scale_color_npg() +
-  labs(title = "Publication trend by data type",
-    x = "Data type", y = "Percentage") +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-  theme_pubr() 
+  filter(Pub.year >= 2002) %>%
+  ggplot(aes(x = Pub.year, y = prop, fill = data_types)) +
+    geom_col(position = "fill") +
+    labs(title = "Publication trend by data types",
+      x = "Publication years", y = "Percentage",
+      fill = "Data types") +
+    scale_x_continuous(breaks= c(2000, 2005, 2010, 2015)) +
+    scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+    theme_pubr() +
+    scale_fill_npg()
 
 ggsave("/home/jae/linked_fate_review/output/pub_trend_data_types.png")
 ```
