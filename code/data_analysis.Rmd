@@ -210,15 +210,3 @@ lit_review %>%
 
 ggsave("/home/jae/linked_fate_review/output/pub_trend_data_types.png")
 ```
-
-# Key takeaways 
-
-1. Linked fate research has been growing and expanding
-
-2. Mostly driven by survey data (86%)
-
-3. Articles, discussing environmental factors, analyze contextual variables not contexts 
-
-4. Few employed mixed-methods or utilized cross-national or cross-regional comparisons 
-
-5. Comparions are mostly done in the context of survey data (heterogeneous treatment effects)
