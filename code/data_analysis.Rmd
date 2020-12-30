@@ -13,26 +13,29 @@ output:
 
 ```{r include=FALSE}
 
-# Clean up the environment
-
-rm(list = ls())
-
-# Import pacakges 
+# Import packages 
 
 if (!require("pacman")) install.packages("pacman")
+
 pacman::p_load(
-        tidyverse, # for the tidyverse framework
-        patchwork, # for arranging ggplots 
-        desc, # for descriptive stat analysis
-        ggpubr, # for arranging ggplots 
-        ggthemes, # for fancy ggplot themes
-        broom, # for modeling
+        tidyverse, # the tidyverse framework
+        patchwork, # arranging ggplots 
+        desc, # descriptive stat analysis
+        ggpubr, # arranging ggplots 
+        ggthemes, # fancy ggplot themes
+        broom, # modeling
         ggfortify, # extended version of ggplot 
-        ggsci, # for color palette
-        Hmisc, # for capitalization
-        stargazer, # for model reports  
-        conflicted # for resovling conflicts 
+        ggsci, # color palette
+        Hmisc, # capitalization
+        stargazer, # model reports  
+        conflicted, # resovling conflicts 
+        here # reproducibility
         )
+
+devtools::install_github("jaeyk/makereproducible",
+        dependencies = TRUE)
+
+library(makereproducible)
 
 # Resolve conflicts
 
@@ -47,15 +50,14 @@ conflicted::conflict_prefer("mutate", "dplyr")
 
 # load data 
 
-lit_review <- read_csv("/home/jae/linked_fate_review/raw_data/linked_fate_review.csv")
+lit_review <- read_csv(make_here("/home/jae/linked_fate_review/raw_data/linked_fate_review.csv"))
 
 ```
 
 
 # Data Collection 
 
-I searched linked fate related articles using Google scholar. I used two search queries: (1) "linked fate" + "dawson" and (2) "linked fate" + "group consciousness" + "solidarity". (1) is a narrow search that only found articles directly related to Dawson's origianl work. (2) is a broad search that found articles thematically related to the topcis that Dawson discussed in his book. I avoided collecting data on books, book chapters, and book reviews since many of them overlap with what individual research papers reported. I searched up to 150 results using each search query and removed the duplicate. This search may not be exhausitive but it at least provides some systematic evidence on the scope of scholarly works on linked fate.
-
+I used two search queries: (1) “linked fate” + “dawson” and (2) “linked fate” + “group consciousness” + “solidarity.” The first (1) is admittedly narrow in scope. It yielded only articles directly related to Dawson’s original study. The second (2) is a broad search that identified research papers focused not only on linked fate but also on its two close conceptual cousins that Dawson explicitly engaged in the 1994 book. I culled the initial 103 results for each query, sorted by relevance, removed duplicates, and excluded non-empirical research in the data.
 
 ## The total N of articles
 
@@ -67,7 +69,7 @@ cat(("The total number of articles is"), nrow(lit_review))
 
 ```
 
-Some articles are lit reviews or law review artices or thoeretical pieces that don't discuss data. Let's exclude them.
+Some articles are lit reviews or law review articles or theoretical pieces that don't discuss data. Let's exclude them.
 
 ```{r echo=FALSE}
 
@@ -91,7 +93,7 @@ cat("The total number of journals in the data is",
 
 ## Overall patterns
 
-An overall publication pattern on linked fate. Articles publisehd in recent years are less likely to be included in the data due to their less well-known status. That may explain why there are fewer articles in the past few years.
+The resulting sample (N = 89) is not an exhaustive list of published articles on linked fate. For instance, the search engine tends to miss recent publications because the results are sorted by relevance. This selection bias partly explains why the number of articles on linked fate appears to dip slightly in the last few years.
 
 ### Publication trend on linked fate
 
@@ -104,11 +106,12 @@ lit_review %>%
   geom_point() +
   geom_line() +
   theme_pubr() +
-  labs(title = "Publication trend on linked fate", x = "Publication years", y = "Count") + scale_x_continuous(breaks= c(2000, 2005, 2010, 2015)) +
-  scale_y_continuous(breaks= scales::pretty_breaks()) +
-  theme(axis.text.x=element_text(angle=90, hjust=1))
+  labs(title = "Publication trend on linked fate", x = "Publication year", y = "Count") + 
+  scale_x_continuous(breaks = c(2000, 2005, 2010, 2015)) +
+  scale_y_continuous(breaks = scales::pretty_breaks()) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-ggsave("/home/jae/linked_fate_review/output/pub_trend.png", width = 7) 
+ggsave(here("output/pub_trend.png"), width = 7) 
 
 ```
 
@@ -130,14 +133,14 @@ lit_review %>%
   ggplot(aes(x = Pub.year, y = prop, fill = group)) +
     geom_col(position = "fill") +
     labs(title = "Publication trend on linked fate sorted by research subjects",
-      x = "Publication years", y = "Percentage",
+      x = "Publication year", y = "Percentage",
       fill = "Research subjects") +
-    scale_x_continuous(breaks= c(2000, 2005, 2010, 2015)) +
+    scale_x_continuous(breaks = c(2000, 2005, 2010, 2015)) +
     scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
     theme_pubr() +
     scale_fill_npg()
 
-ggsave("/home/jae/linked_fate_review/output/pub_trend_sub_groups.png", width = 8)
+ggsave(here("output/pub_trend_sub_groups.png"), width = 8)
 
 ```
 
@@ -203,10 +206,10 @@ lit_review %>%
     labs(title = "Publication trend by data types",
       x = "Publication years", y = "Percentage",
       fill = "Data types") +
-    scale_x_continuous(breaks= c(2000, 2005, 2010, 2015)) +
+    scale_x_continuous(breaks = c(2000, 2005, 2010, 2015)) +
     scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
     theme_pubr() +
     scale_fill_npg()
 
-ggsave("/home/jae/linked_fate_review/output/pub_trend_data_types.png")
+ggsave(here("output/pub_trend_data_types.png"))
 ```
