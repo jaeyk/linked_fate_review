@@ -203,7 +203,7 @@ lit_review %>%
   ggplot(aes(x = Pub.year, y = prop, fill = data_types)) +
     geom_col(position = "fill") +
     labs(title = "Publication trend by data types",
-      x = "Publication years", y = "Percentage",
+      x = "Publication year", y = "Percentage",
       fill = "Data types") +
     scale_x_continuous(breaks = c(2000, 2005, 2010, 2015)) +
     scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
