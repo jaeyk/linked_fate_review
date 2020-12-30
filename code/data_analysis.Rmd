@@ -102,14 +102,13 @@ The resulting sample (N = 89) is not an exhaustive list of published articles on
 lit_review %>%
   group_by(Pub.year) %>%
   count() %>%
-  ggplot(aes(x = Pub.year, y = n)) +
+  ggplot(aes(x = Pub.year, y = cumsum(n))) +
   geom_point() +
   geom_line() +
   theme_pubr() +
-  labs(title = "Publication trend on linked fate", x = "Publication year", y = "Count") + 
+  labs(title = "Publication trend on linked fate", x = "Publication year", y = "Cumulative count") + 
   scale_x_continuous(breaks = c(2000, 2005, 2010, 2015)) +
-  scale_y_continuous(breaks = scales::pretty_breaks()) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  scale_y_continuous(breaks = scales::pretty_breaks()) 
 
 ggsave(here("output/pub_trend.png"), width = 7) 
 
