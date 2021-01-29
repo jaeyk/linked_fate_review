@@ -32,17 +32,18 @@ pacman::p_load(
         here # reproducibility
         )
 
-devtools::install_github("jaeyk/makereproducible",
-        dependencies = TRUE)
-
-library(makereproducible)
-
 # Resolve conflicts
 
 conflicted::conflict_prefer("select", "dplyr")
 conflicted::conflict_prefer("filter", "dplyr")
 conflicted::conflict_prefer("count", "dplyr")
 conflicted::conflict_prefer("mutate", "dplyr")
+
+devtools::install_github("jaeyk/makereproducible",
+        dependencies = TRUE)
+
+library(makereproducible)
+
 
 ```
 
@@ -120,6 +121,8 @@ ggsave(here("output/pub_trend.png"), width = 7)
 
 lit_review %>%
   gather(group, value, Black, Black_immigrants, Asian, Latinx, Whites, Others) %>%
+  mutate(group = recode(group, 
+                        "Latinx" = "Latino")) %>%
   filter(value == 1) %>%
   group_by(Pub.year, group) %>%
   dplyr::summarize(n = n()) %>%
@@ -173,8 +176,8 @@ lit_review %>%
   geom_col() +
   coord_flip() +
   theme_pubr() +
-  labs(title = "Articles by academic fields",
-    x = "Academid fields", y = "Count")
+  labs(title = "Articles by journal type",
+    x = "Journal type", y = "Count")
 
 ggsave("/home/jae/linked_fate_review/output/pub_trend_journals.png")
 ```
@@ -202,7 +205,7 @@ lit_review %>%
   filter(Pub.year >= 2002) %>%
   ggplot(aes(x = Pub.year, y = prop, fill = data_types)) +
     geom_col(position = "fill") +
-    labs(title = "Publication trend by data types",
+    labs(title = "Publication trend by data type",
       x = "Publication year", y = "Percentage",
       fill = "Data types") +
     scale_x_continuous(breaks = c(2000, 2005, 2010, 2015)) +
