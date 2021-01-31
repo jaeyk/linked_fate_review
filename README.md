@@ -1,2 +1,2 @@
 # linked_fate_review
-Replication files for the review paper on linked fate (with Reuel Rogers)
+Replication files for the reflection paper on linked fate (with Reuel Rogers)
