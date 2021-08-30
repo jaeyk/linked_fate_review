@@ -13,10 +13,10 @@ Paper: https://osf.io/p4tcj/ (accepted at **Perspectives on Politics**)
 * Platform: x86_64-pc-linux-gnu (64-bit)
 * Running under: Ubuntu 21.04
 
-3. Raw data: linked_fate_review.csv
+3. Raw data: [linked_fate_review.csv](https://github.com/jaeyk/linked_fate_review/blob/master/raw_data/linked_fate_review.csv)
 
-4. Replication code: data_analysis.Rmd
+4. Replication code: [data_analysis.Rmd](https://github.com/jaeyk/linked_fate_review/blob/master/code/data_analysis.Rmd)
 
 5. Output files 
-* Figure 1 (figure1.png): publication trend on linked fate 
-* Figure 2 (figure2.png): a schematic causal diagram on black utility heuristic theory 
+* Figure 1 ([figure1.png](https://github.com/jaeyk/linked_fate_review/raw/master/output/figure1.png)): publication trend on linked fate 
+* Figure 2 ([figure2.png](https://github.com/jaeyk/linked_fate_review/raw/master/output/figure2.png)): a schematic causal diagram on black utility heuristic theory 
