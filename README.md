@@ -4,7 +4,7 @@ Author: Jae Yeon Kim (jkim638@jhu.edu)
 
 Paper: https://osf.io/p4tcj/ (accepted at **Perspectives on Politics**)
 
-*Session information*
+**Session information**
 
 1. Programming languages
 * R version 4.0.4 (2021-02-15)
