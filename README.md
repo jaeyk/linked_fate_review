@@ -1,2 +1,22 @@
-# linked_fate_review
-Replication files for the reflection paper on linked fate (with Reuel Rogers)
+# Replication files for "Rewiring Linekd Fate: Bringing Back History, Agency, Power" (Rogers and Kim, forthcoming)
+
+Author: Jae Yeon Kim (jkim638@jhu.edu)
+
+Paper: https://osf.io/p4tcj/ (accepted at **Perspectives on Politics**)
+
+*Session information*
+
+1. Programming languages
+* R version 4.0.4 (2021-02-15)
+
+2. Operation system 
+* Platform: x86_64-pc-linux-gnu (64-bit)
+* Running under: Ubuntu 21.04
+
+3. Raw data: linked_fate_review.csv
+
+4. Replication code: data_analysis.Rmd
+
+5. Output files 
+* Figure 1 (figure1.png): publication trend on linked fate 
+* Figure 2 (figure2.png): a schematic causal diagram on black utility heuristic theory 
