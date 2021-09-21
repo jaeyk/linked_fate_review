@@ -2,8 +2,8 @@
 
 Author: Jae Yeon Kim (jkim638@jhu.edu)
 
-Paper: https://osf.io/p4tcj/ (conditionally accepted at **Perspectives on Politics**)
-Dataset: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/MCLH9V
+* Paper: https://osf.io/p4tcj/ (conditionally accepted at **Perspectives on Politics**)
+* Dataset: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/MCLH9V
 
 **Session information**
 
